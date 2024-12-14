@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Items</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            background: #4CAF50;
+            color: white;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header .left {
+            flex: 1;
+        }
+        .header .center {
+            flex: 2;
+            text-align: center;
+        }
+        .header .right {
+            flex: 1;
+            text-align: right;
+        }
+        .header a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .header a.active {
+            text-decoration: underline;
+        }
+        .container {
+            padding: 20px;
+            max-width: 1000px;
+            margin: auto;
+        }
+        .search-bar {
+            margin-bottom: 20px;
+        }
+        .search-bar input {
+            padding: 10px;
+            width: calc(100% - 20px);
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+        }
+        table th, table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        table th {
+            background: #f4f4f4;
+        }
+        table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        table tr:hover {
+            background-color: #f1f1f1;
+        }
+        .sku-link {
+            color: #4CAF50;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+    </style>
+    <script>
+        function filterTable() {
+            const searchInput = document.getElementById("search-input").value.toLowerCase();
+            const rows = document.querySelectorAll("tbody tr");
+
+            rows.forEach(row => {
+                const sku = row.querySelector("td:nth-child(1)").innerText.toLowerCase();
+                const title = row.querySelector("td:nth-child(2)").innerText.toLowerCase();
+                const description = row.querySelector("td:nth-child(3)").innerText.toLowerCase();
+
+                if (sku.includes(searchInput) || title.includes(searchInput) || description.includes(searchInput)) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <div class="header">
+        <div class="left">
+            <p>Welcome, {{ username }}!</p>
+        </div>
+        <div class="center">
+            <a href="/dashboard">Dashboard</a> | 
+            <a href="/items" class="active">Items</a> | 
+            <a href="/categories">Categories</a>
+        </div>
+        <div class="right">
+            <a href="/logout">Logout</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Page Header -->
+        <h2>All Items</h2>
+
+        <!-- Search Bar -->
+        <div class="search-bar">
+            <input 
+                type="text" 
+                id="search-input" 
+                placeholder="Search items by SKU, Title, or Description..." 
+                onkeyup="filterTable()">
+        </div>
+
+        <!-- Items Table -->
+        <table>
+            <thead>
+                <tr>
+                    <th>SKU</th>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Category</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr>
+                    <td>
+                        <a href="/items/{{ item['SKU'] }}" class="sku-link">
+                            {{ item['SKU'] }}
+                        </a>
+                    </td>
+                    <td>{{ item['itemTitle'] }}</td>
+                    <td>{{ item['itemDesc'] }}</td>
+                    <td>
+                        <a href="/categories/{{ item['catCode'] }}" class="sku-link">
+                            {{ item['catCode'] }}
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

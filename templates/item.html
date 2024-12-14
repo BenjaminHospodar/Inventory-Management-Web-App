@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Item Details</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            font-size: 2.5rem;
+            color: #4CAF50;
+        }
+        .item-details {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .item-details p {
+            font-size: 1.1rem;
+            margin: 10px 0;
+            color: #555;
+        }
+        .item-details p strong {
+            color: #333;
+        }
+        .btn-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .back-btn {
+            padding: 10px 20px;
+            font-size: 1rem;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .back-btn:hover {
+            background-color: #45a049;
+        }
+        .sign-out-btn {
+            padding: 10px 20px;
+            font-size: 1rem;
+            background-color: #f44336;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .sign-out-btn:hover {
+            background-color: #e53935;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1>{{ item[2] }} (SKU: {{ item[0] }})</h1>
+        </div>
+
+        <div class="item-details">
+            <p><strong>Description:</strong> {{ item[3] }}</p>
+            <p><strong>Category:</strong> {{ item[4] }}</p>
+            <p><strong>Quantity Available:</strong> {{ item[1] }}</p>
+        </div>
+
+        <div class="btn-container">
+            <a href="/dashboard" class="back-btn">Back to Dashboard</a>
+            <form method="POST" action="{{ url_for('item', sku=item[0]) }}">
+                <input type="hidden" name="action" value="sign_out">
+                <button type="submit" class="sign-out-btn">Sign Out</button>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

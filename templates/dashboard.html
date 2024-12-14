@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            background: #4CAF50;
+            color: white;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header .left {
+            flex: 1;
+        }
+        .header .center {
+            flex: 2;
+            text-align: center;
+        }
+        .header .right {
+            flex: 1;
+            text-align: right;
+        }
+        .header a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .header a.active {
+            text-decoration: underline;
+        }
+        .container {
+            padding: 20px;
+            max-width: 1000px;
+            margin: auto;
+        }
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .stats div {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+            text-align: center;
+            flex: 1;
+            margin: 0 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+        }
+        table th, table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        table th {
+            background: #f4f4f4;
+        }
+        table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        table tr:hover {
+            background-color: #f1f1f1;
+        }
+        .sku-link {
+            color: #4CAF50;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+        .sign-in-btn {
+            padding: 5px 10px;
+            background-color: #f44336;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .sign-in-btn:hover {
+            background-color: #d32f2f;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="left">
+            <p>Welcome, {{ username }}!</p>
+        </div>
+        <div class="center">
+            <a href="/dashboard" class="active">Dashboard</a> | <a href="/items">Items</a> | <a href="/categories">Categories</a>
+        </div>
+        <div class="right">
+            <a href="/logout">Logout</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Header Stats -->
+        <div class="stats">
+            <div>
+                <h2>Total Items</h2>
+                <p>{{ total_items }}</p>
+            </div>
+            <div>
+                <h2>Total Categories</h2>
+                <p>{{ total_categories }}</p>
+            </div>
+            <div>
+                <h2>Total Users</h2>
+                <p>{{ total_users }}</p>
+            </div>
+        </div>
+
+        <!-- Signed-Out Items Table -->
+        <h2>Signed-Out Items</h2>
+        <table id="signed-out-table">
+            <thead>
+                <tr>
+                    <th>SKU</th>
+                    <th>Item Name</th>
+                    <th>Date</th>
+                    <th>Signed-Out Quantity</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in signed_out_data %}
+                <tr id="row-{{ item['SKU'] }}">
+                    <td><a href="/items/{{ item['SKU'] }}" class="sku-link">{{ item['SKU'] }}</a></td>
+                    <td>{{ item['itemTitle'] }}</td>
+                    <td>{{ item['date'] }}</td>
+                    <td id="quantity-{{ item['SKU'] }}">{{ item['signOutQty'] }}</td>
+                    <td><button class="sign-in-btn" onclick="signInItem({{ item['SKU'] }}, '{{ item['date']|escape }}')">Sign-In</button></td>
+                </tr>
+                {% endfor %}
+            </tbody>            
+        </table>
+    </div>
+
+    <script>
+        function signInItem(sku, date) {
+            const newQuantity = document.getElementById(`quantity-${sku}`).innerText - 1;
+
+            if (newQuantity === 0) {
+                document.getElementById(`row-${sku}`).remove();
+            } else {
+                document.getElementById(`quantity-${sku}`).innerText = newQuantity;
+            }
+
+            fetch('/dashboard', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    quantity: newQuantity,
+                    SKU: sku,
+                    date: date // Include the date in the body
+                })               
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data); // You can log the response for debugging
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>
