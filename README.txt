@@ -5,7 +5,7 @@ The code was written quickly (in 2–3 hours) and is intended solely to demonstr
 
 ---
 
-## 💾 How to Run
+## How to Run
 
 1. **Launch SQLite:**
    ```bash
@@ -24,7 +24,7 @@ The code was written quickly (in 2–3 hours) and is intended solely to demonstr
 
 ---
 
-## 📝 Notes
+## Notes
 
 - This app is a basic proof-of-concept created for academic purposes.
 - If you’re browsing this repo: it's intentionally unpolished and minimal — the goal was just to show how the database works.
